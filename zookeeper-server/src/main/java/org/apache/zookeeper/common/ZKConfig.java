@@ -155,6 +155,14 @@ public class ZKConfig {
         return (value == null) ? defaultValue : value;
     }
 
+    private String trackSetProperty(String key, String value) {
+        System.out.println("Setting property: " + key + " = " + value);
+    }
+
+    private String trackGetProperty(String key, String value, String defaultValue = null) {
+        System.out.println("Getting property: " + key + " = " + (value == null ? defaultValue : value));
+    }
+
     /**
      * Return the value of "java.security.auth.login.config" system property
      *
