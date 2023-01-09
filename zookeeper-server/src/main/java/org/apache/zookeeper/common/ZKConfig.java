@@ -139,7 +139,9 @@ public class ZKConfig {
      * @return property value
      */
     public String getProperty(String key) {
-        return properties.get(key);
+        String value = properties.get(key);
+        trackGetProperty(key, value, null);
+        return value;
     }
 
     /**
@@ -152,15 +154,16 @@ public class ZKConfig {
      */
     public String getProperty(String key, String defaultValue) {
         String value = properties.get(key);
+        trackGetProperty(key, value, defaultValue);
         return (value == null) ? defaultValue : value;
     }
 
-    private String trackSetProperty(String key, String value) {
-        System.out.println("Setting property: " + key + " = " + value);
+    private void trackSetProperty(String key, String value, String oldValue) {
+        System.out.println("[CTEST] Setting property: " + key + " = " + value + " (old value: " + oldValue + ")");
     }
 
-    private String trackGetProperty(String key, String value, String defaultValue = null) {
-        System.out.println("Getting property: " + key + " = " + (value == null ? defaultValue : value));
+    private void trackGetProperty(String key, String value, String defaultValue) {
+        System.out.println("[CTEST] Getting property: " + key + " = " + (value == null ? defaultValue : value));
     }
 
     /**
@@ -186,6 +189,7 @@ public class ZKConfig {
             throw new IllegalArgumentException("property key is null.");
         }
         String oldValue = properties.put(key, value);
+        trackSetProperty(key, value, oldValue);
         if (null != oldValue && !oldValue.equals(value)) {
             LOG.debug("key {}'s value {} is replaced with new value {}", key, oldValue, value);
         }
