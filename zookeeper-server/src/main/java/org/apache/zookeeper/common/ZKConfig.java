@@ -158,15 +158,64 @@ public class ZKConfig {
         return (value == null) ? defaultValue : value;
     }
 
+    private Object mutex = new Object();
+
+    /*
+    private void printStackTraces(StackTraceElement[] elements) {
+        for (StackTraceElement element: elements) {
+            System.out.println(element);
+        }
+    }
+    */
+
     private void trackSetProperty(String key, String value, String oldValue) {
-        System.out.println("[CTEST] Setting property: " + key + " = " + value + " (old value: " + oldValue + ")");
+        synchronized (mutex) {
+            System.out.println("[CTEST] Setting property: " + key + " = " + value + " (old value: " + oldValue + ")");
+
+            /*
+            Map<Thread, StackTraceElement[]> m = Thread.getAllStackTraces();
+            Thread t = Thread.currentThread();
+            printStackTraces(m.get(t));
+            ThreadGroup pg = t.getThreadGroup().getParent();
+            if (pg != null) {
+                for (Map.Entry<Thread, StackTraceElement[]> entry: m.entrySet()) {
+                    if (entry.getKey().getThreadGroup() == pg) {
+                        printStackTraces(entry.getValue());
+                    }
+                }
+            }
+            */
+            
+            new Throwable().printStackTrace(System.out);
+        }
     }
 
     private void trackGetProperty(String key, String value, String defaultValue) {
-        System.out.println("[CTEST] Getting property: " + key + " = " + (value == null ? defaultValue : value));
+        synchronized (mutex) {
+            System.out.println("[CTEST] Getting property: " + key + " = " + (value == null ? defaultValue : value));
+
+            /*
+            Map<Thread, StackTraceElement[]> m = Thread.getAllStackTraces();
+            Thread t = Thread.currentThread();
+            printStackTraces(m.get(t));
+            ThreadGroup pg = t.getThreadGroup().getParent();
+            if (pg != null) {
+                pg = pg.getParent();
+                if (pg != null) {
+                    for (Map.Entry<Thread, StackTraceElement[]> entry: m.entrySet()) {
+                        if (entry.getKey().getThreadGroup() == pg) {
+                            printStackTraces(entry.getValue());
+                        }
+                    }
+                }
+            }
+            */
+
+            new Throwable().printStackTrace(System.out);
+        }
     }
 
-    /**
+    /**org.apache.zookeeper.common.ZKConfig.trackGetProperty
      * Return the value of "java.security.auth.login.config" system property
      *
      * @return value
